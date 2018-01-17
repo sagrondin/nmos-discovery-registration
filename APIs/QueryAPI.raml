@@ -1,11 +1,11 @@
-#%RAML 0.8
+#%RAML 1.0
 
 # AMWA NMOS Discovery and Registration Specification: Query API
 # (c) AMWA 2016
 
 title: Query
 baseUri: http://example.api.com/x-nmos/query/{version}
-version: v1.2
+version: v1.3
 mediaType: application/json
 schemas:
   - Node: !include schemas/node.json
@@ -20,6 +20,8 @@ schemas:
     Senders: !include schemas/senders.json
     Receiver: !include schemas/receiver.json
     Receivers: !include schemas/receivers.json
+    Group: !include schemas/group.json
+    Groups: !include schemas/groups.json
     EmptySchema: !include schemas/empty.json
     ErrorSchema: !include schemas/error.json
 traits:
@@ -440,6 +442,45 @@ documentation:
           description: Returned when the requested Receiver ID does not exist
           body:
             schema: ErrorSchema
+/groups:
+  displayName: Groups
+  get:
+    is: [paged, rql, downgrade]
+    description: |
+      List Groups.
+      NB: Query parameters should be implemented for all permitted resource attributes.
+    body:
+      schema: EmptySchema
+    queryParameters:
+      id:
+      version:
+      label:
+      description:
+      tags:
+    responses:
+      200:
+        body:
+          example: !include ../examples/queryapi-v1.1-groups-get-200.json
+          schema: Groups
+  /{groupId}:
+    uriParameters:
+      senderId:
+        type: string
+        pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    get:
+      is: [downgrade]
+      description: Get a single Group
+      body:
+        schema: EmptySchema
+      responses:
+        200:
+          body:
+            example: !include ../examples/queryapi-v1.1-groupid-get-200.json
+            schema: Group
+        404:
+          description: Returned when the requested Group ID does not exist
+          body:
+            schema: ErrorSchema            
 /subscriptions:
   displayName: Subscriptions
   post:

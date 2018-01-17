@@ -1,11 +1,11 @@
-#%RAML 0.8
+#%RAML 1.0
 
 # AMWA NMOS Discovery and Registration Specification: Registration API
 # (c) AMWA 2016
 
 title: Registration
 baseUri: http://example.api.com/x-nmos/registration/{version}
-version: v1.2
+version: v1.3
 mediaType: application/json
 schemas:
   - EmptySchema: !include schemas/empty.json
@@ -93,7 +93,8 @@ documentation:
           "sources",
           "flows",
           "senders",
-          "receivers"
+          "receivers",
+          "groups"
         ]
     delete:
       description: Delete a registered resource

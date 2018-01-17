@@ -79,6 +79,18 @@
           "$ref": "flow.json"
         }
       }
+    },
+    {
+      "properties": {
+        "type": {
+          "description": "Singular form of the resource type to be registered",
+          "type": "string",
+          "enum": ["group"]
+        },
+        "data": {
+          "$ref": "group.json"
+        }
+      }
     }
   ]
 }

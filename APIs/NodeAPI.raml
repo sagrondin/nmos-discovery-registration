@@ -1,11 +1,11 @@
-#%RAML 0.8
+#%RAML 1.0
 
 # AMWA NMOS Discovery and Registration Specification: Node API
 # (c) AMWA 2016
 
 title: Node
 baseUri: http://example.api.com/x-nmos/node/{version}
-version: v1.2
+version: v1.3
 mediaType: application/json
 schemas:
   - Node: !include schemas/node.json
@@ -20,6 +20,8 @@ schemas:
     Senders: !include schemas/senders.json
     Receiver: !include schemas/receiver.json
     Receivers: !include schemas/receivers.json
+    Group: !include schemas/group.json
+    Groups: !include schemas/groups.json
     EmptySchema: !include schemas/empty.json
     ErrorSchema: !include schemas/error.json
 documentation:
@@ -56,6 +58,7 @@ documentation:
       | ver\_dvc            | devices                             |
       | ver\_snd            | senders                             |
       | ver\_rcv            | receivers                           |
+      | ver\_grp            | groups                              |
 
       The value of each of the above should be an unsigned 8-bit integer initialised to '0'. This integer MUST be incremented and mDNS TXT record updated whenever a change is made to the corresponding HTTP API resource on the Node. The integer must wrap back to a value of '0' after reaching a maximum value of '255' (MAX_UINT8_T).
 
@@ -262,3 +265,32 @@ documentation:
             description: Returned when the requested Receiver ID does not exist
             body:
               schema: ErrorSchema
+/groups:
+  displayName: Groups
+  get:
+    description: List Groups
+    body:
+      schema: EmptySchema
+    responses:
+      200:
+        body:
+          example: !include ../examples/nodeapi-v1.1-groups-get-200.json
+          schema: Groups
+  /{groupId}:
+    uriParameters:
+      senderId:
+        type: string
+        pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    get:
+      description: Get a single Group
+      body:
+        schema: EmptySchema
+      responses:
+        200:
+          body:
+            example: !include ../examples/nodeapi-v1.1-groupid-get-200.json
+            schema: Group
+        404:
+          description: Returned when the requested Group ID does not exist
+          body:
+            schema: ErrorSchema
